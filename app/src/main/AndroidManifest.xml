@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SecureSMS">
         <activity
+            android:name=".ContactViewActivity"
+            android:exported="true" />
+        <activity
             android:name=".AddContactActivity"
             android:exported="true" />
         <activity
