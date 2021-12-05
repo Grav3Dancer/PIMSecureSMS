@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".authentication.LoginActivity">
-
+    tools:context=".authentication.RegisterActivity">
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -38,12 +37,12 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <TextView
-        android:id="@+id/loginTextView"
+        android:id="@+id/registerTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:fontFamily="@font/roboto_font"
-        android:text="Login"
+        android:text="Register"
         android:textColor="@color/main_blue"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,7 +57,7 @@
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginTextView">
+        app:layout_constraintTop_toBottomOf="@+id/registerTextView">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/usernameInputText"
@@ -84,24 +83,43 @@
             android:hint="password" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/buttonLogin"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordRepeatInput"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Sign in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordInput" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordInput">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/passwordRepeatInputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="repeat password" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/buttonRegister"
+        android:id="@+id/buttonCreateAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Register"
+        android:text="Create account"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordRepeatInput" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_arrow_back_24" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

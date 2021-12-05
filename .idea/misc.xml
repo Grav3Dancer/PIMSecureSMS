@@ -3,8 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/PIMSecureSMS/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/PIMSecureSMS/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/PIMSecureSMS/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/PIMSecureSMS/app/src/main/res/drawable/ic_lock_24.xml" value="0.1" />
+        <entry key="..\:/PIMSecureSMS/app/src/main/res/drawable/icon_foregound.xml" value="0.1" />
+        <entry key="..\:/PIMSecureSMS/app/src/main/res/font/hidden_font.xml" value="0.1" />
+        <entry key="..\:/PIMSecureSMS/app/src/main/res/font/roboto_font.xml" value="0.1" />
+        <entry key="..\:/PIMSecureSMS/app/src/main/res/layout/activity_add_contact.xml" value="0.21458333333333332" />
         <entry key="..\:/PIMSecureSMS/app/src/main/res/layout/activity_login.xml" value="0.2" />
         <entry key="..\:/PIMSecureSMS/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/PIMSecureSMS/app/src/main/res/layout/activity_register.xml" value="0.196875" />
+        <entry key="..\:/PIMSecureSMS/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
+        <entry key="..\:/PIMSecureSMS/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />
       </map>
     </option>
   </component>
