@@ -1,11 +1,14 @@
 package com.example.securesms.authentication
 
+import android.Manifest
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import com.example.securesms.MainActivity
 import com.example.securesms.R
 import com.example.securesms.Services.FirebaseService
@@ -28,6 +31,15 @@ class LoginActivity : AppCompatActivity() {
         buttonLogin = findViewById(R.id.buttonLogin)
         buttonRegister = findViewById(R.id.buttonRegister)
 
+        val requestPermissionLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                } else {
+                }
+            }
+
         buttonLogin.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             val username = emailInput.editText!!.text.toString()
@@ -41,6 +53,14 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }
             }
+            intent.putExtra("login", "HUBERT")
+            intent.putExtra("cosinnego", "DUPA")
+
+            requestPermissionLauncher.launch(
+                Manifest.permission.READ_SMS)
+
+            startActivity(intent)
+            this.finish()
         }
 
         buttonRegister.setOnClickListener {
