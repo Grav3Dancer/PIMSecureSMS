@@ -3,6 +3,7 @@
     package="com.example.securesms">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
 
@@ -17,6 +18,9 @@
         android:theme="@style/Theme.SecureSMS">
         <activity
             android:name=".ScannerActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ContactViewActivity"
             android:exported="true" />
         <activity
             android:name=".AddContactActivity"
