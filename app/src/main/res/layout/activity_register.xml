@@ -60,10 +60,10 @@
         app:layout_constraintTop_toBottomOf="@+id/registerTextView">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/usernameInputText"
+            android:id="@+id/emailInputText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="username" />
+            android:hint="email" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -80,7 +80,8 @@
             android:id="@+id/passwordInputText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="password" />
+            android:hint="password"
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -97,7 +98,8 @@
             android:id="@+id/passwordRepeatInputText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="repeat password" />
+            android:hint="repeat password"
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

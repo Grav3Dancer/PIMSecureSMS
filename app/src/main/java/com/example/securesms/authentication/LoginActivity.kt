@@ -5,36 +5,41 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import com.example.securesms.MainActivity
 import com.example.securesms.R
+import com.example.securesms.Services.FirebaseService
 import com.google.android.material.textfield.TextInputLayout
 
 class LoginActivity : AppCompatActivity() {
 
-    lateinit var usernameInput : TextInputLayout
+    lateinit var emailInput : TextInputLayout
     lateinit var passwordInput : TextInputLayout
     lateinit var buttonLogin : Button
     lateinit var buttonRegister : Button
 
+    val database: FirebaseService = FirebaseService()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        usernameInput = findViewById(R.id.usernameInput)
+        emailInput = findViewById(R.id.usernameInput)
         passwordInput = findViewById(R.id.passwordInput)
         buttonLogin = findViewById(R.id.buttonLogin)
         buttonRegister = findViewById(R.id.buttonRegister)
 
         buttonLogin.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
-            val username = usernameInput.editText!!.text.toString()
+            val username = emailInput.editText!!.text.toString()
             val password = passwordInput.editText!!.text.toString()
-            if (username.equals("hubert") && password.equals("miszcz")) {
-                intent.putExtra("login", "HUBERT")
-                intent.putExtra("cosinnego", "DUPA")
-                startActivity(intent)
-                this.finish()
-            } else {
-                Log.v("secureSMS_login", "złe dane i chuj $username $password")
+            database.login(username, password){ isSuccess, message ->
+                if (isSuccess) {
+                    Toast.makeText(this, "Logged in successfully", Toast.LENGTH_SHORT).show()
+                    startActivity(intent)
+                    this.finish()
+                } else {
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
