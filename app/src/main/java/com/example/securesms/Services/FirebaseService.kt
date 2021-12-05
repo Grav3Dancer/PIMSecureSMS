@@ -25,13 +25,26 @@ class FirebaseService {
             .addOnFailureListener{ error -> callback.onResult(false, error.message)}
     }
 
-    fun register(email: String?, password: String?, callback: Callback){
-        if(email.isNullOrEmpty() || password.isNullOrEmpty()){
+    fun register(email: String?, password: String?, telNumber: String?, uniqueKey: String, callback: Callback){
+        if(email.isNullOrEmpty()
+            || password.isNullOrEmpty()
+            || telNumber.isNullOrEmpty()){
             return callback.onResult(false, "Data not provided")
         }
 
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener { callback.onResult(true, null) }
+            .addOnSuccessListener { res ->
+                val userData = hashMapOf(
+                    "userId" to res.user!!.uid,
+                    "phoneNumber" to telNumber,
+                    "key" to uniqueKey
+                )
+
+                db.collection("users")
+                    .add(userData)
+                    .addOnSuccessListener { callback.onResult(true, null) }
+                    .addOnFailureListener { error -> callback.onResult(false, error.message) }
+            }
             .addOnFailureListener{ error -> callback.onResult(false, error.message) }
     }
 }
