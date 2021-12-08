@@ -3,16 +3,18 @@ package com.example.securesms.Services
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import com.example.securesms.Models.Contact
+import com.example.securesms.Models.SMS
+import java.io.Serializable
 import java.util.*
 import java.util.stream.Collectors
 
-data class SMS(val date: Date, val phoneNumber: String, val message: String, val send: Boolean)
 
 class SmsService(val context: Context){
 
-    fun GetMessages(phoneList:MutableList<String>):Map<String, List<SMS>>{
+    fun GetMessages(contacts: List<Contact>):Map<Contact, List<SMS>>{
         val groupedMessages = GroupByPhoneNumber(GetAllSMS())
-        return RemoveSMSNotFromList(groupedMessages,phoneList)
+        return LinkSMSesToContacts(groupedMessages,contacts)
     }
     private fun TimeStampToDate(timestamp:String):Date{
         return Date(timestamp.toLong())
@@ -33,12 +35,6 @@ class SmsService(val context: Context){
             context.contentResolver.query(Uri.parse("content://sms/sent"), null, null, null, null)
         if (cursorSent!!.moveToFirst()) {
             do {
-                var msgData = ""
-                for (idx in 0 until cursorSent.getColumnCount()) {
-                    msgData += " " + cursorSent.getColumnName(idx)
-                        .toString() + ":" + cursorSent.getString(idx)
-                }
-                Log.v("s", msgData)
                 smsList.add(
                     SMS(
                         TimeStampToDate(cursorSent.getString(4)),
@@ -71,7 +67,13 @@ class SmsService(val context: Context){
     private fun GroupByPhoneNumber(list: MutableList<SMS>):Map<String, List<SMS>>{
         return list.stream().collect(Collectors.groupingBy { w -> w.phoneNumber })
     }
-    private fun RemoveSMSNotFromList(SMS:Map<String, List<SMS>>,phoneNumbers:List<String>):Map<String, List<SMS>> {
-        return SMS.filter { (key,value) -> phoneNumbers.contains(key)}
+
+    private fun LinkSMSesToContacts(SMS:Map<String, List<SMS>>,contacts:List<Contact>):Map<Contact, List<SMS>> {
+        var ContactSMSMap : MutableMap<Contact,List<SMS>> = mutableMapOf();
+        for (contact in contacts) {
+            val sms = SMS.get(contact.phoneNumber) ?: mutableListOf();
+            ContactSMSMap.put(contact,sms)
+        }
+        return ContactSMSMap;
     }
 }

@@ -7,6 +7,7 @@ import android.widget.ListView
 import com.example.securesms.Adapters.ContactsListAdapter
 import com.example.securesms.Services.SmsService
 import android.widget.Button
+import com.example.securesms.Models.Contact
 import com.example.securesms.authentication.LoginActivity
 
 class MainActivity : AppCompatActivity() {
@@ -18,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         contactListView = findViewById(R.id.ContactsListView)
         val smsService= SmsService(this.applicationContext)
-        val x = mutableListOf<String>("Microsoft", "SAN_PL")
+        val x = mutableListOf<Contact>(Contact("x",123,67890,"Microsoft"))
         val groupedMessages = smsService.GetMessages(x)
 
         val adapter = ContactsListAdapter(this)
