@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import com.example.securesms.ContactViewActivity
 import com.example.securesms.Models.Contact
@@ -13,16 +15,19 @@ import com.example.securesms.Models.ListSMS
 import com.example.securesms.Models.SMS
 import com.example.securesms.R
 
-class ContactsListAdapter(val context:Context) : BaseAdapter() {
+class ContactsListAdapter(val context:Context) : BaseAdapter(), Filterable {
     class ListObject(val contact:Contact,val messages: List<SMS>)
+
     var contactList = mutableListOf<ListObject>()
+    var filteredContactList = mutableListOf<ListObject>();
+    private val mFilter: ItemFilter = ItemFilter();
 
     override fun getCount(): Int {
-        return contactList.size
+        return filteredContactList.size
     }
 
     override fun getItem(p0: Int): Any {
-        return contactList[p0]
+        return filteredContactList[p0]
     }
 
     override fun getItemId(p0: Int): Long {
@@ -46,6 +51,29 @@ class ContactsListAdapter(val context:Context) : BaseAdapter() {
     }
     fun AddItem(contact:Contact,messages: List<SMS>){
         contactList.add(ListObject(contact, messages))
+        filteredContactList = contactList;
         notifyDataSetChanged()
+    }
+
+    override fun getFilter(): Filter {
+        return mFilter;
+    }
+
+
+    inner class ItemFilter() : Filter() {
+        override fun performFiltering(p0: CharSequence?): FilterResults {
+            val filterString = p0.toString().lowercase();
+            var results:FilterResults = FilterResults();
+            var data = contactList;
+            var newData = data.filter { it.contact.contactName.lowercase().contains(filterString) || it.contact.phoneNumber.lowercase().contains(filterString) }
+            results.values = newData;
+            results.count = newData.count();
+            return results
+        }
+
+        override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
+            filteredContactList = p1?.values as MutableList<ListObject>
+            notifyDataSetChanged()
+        }
     }
 }
