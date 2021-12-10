@@ -17,6 +17,7 @@ import com.example.securesms.R
 import com.example.securesms.Services.FirebaseService
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -39,7 +40,6 @@ class RegisterActivity : AppCompatActivity() {
         passwordRepeatInput = findViewById(R.id.passwordRepeatInput)
         buttonRegister = findViewById(R.id.buttonCreateAccount)
         buttonBack = findViewById(R.id.buttonBack)
-
         tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
 /*        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {

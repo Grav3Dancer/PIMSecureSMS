@@ -1,7 +1,9 @@
 package com.example.securesms.Models
 
+import java.math.BigInteger
+
 data class ContactQRData(
-    val contactId: Int,
-    val publicKey:Int,
-    val publicP:Int,
-    val publicG:Int);
+    val contactId: String,
+    val publicKey:BigInteger,
+    val publicP:BigInteger,
+    val publicG:BigInteger)

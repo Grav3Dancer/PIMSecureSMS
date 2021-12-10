@@ -1,10 +1,11 @@
 package com.example.securesms.Models
 
 import java.io.Serializable
+import java.math.BigInteger
 
 
 data class Contact(
     val contactName:String,
-    val publicKey:Int,
-    val publicP:Int,
+    val publicKey:BigInteger,
+    val publicP:BigInteger,
     val phoneNumber:String):Serializable;

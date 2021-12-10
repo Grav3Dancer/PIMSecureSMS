@@ -1,5 +1,7 @@
 package com.example.securesms
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.pm.PackageManager
@@ -50,6 +52,10 @@ class ScannerActivity : AppCompatActivity() {
             runOnUiThread {
                 Toast.makeText(this, "Scan result: ${it.text}", Toast.LENGTH_LONG).show()
             }
+            setResult(Activity.RESULT_OK,
+                Intent()
+                    .putExtra("scannedText", it.text))
+            finish()
         }
 
         codeScanner.errorCallback = ErrorCallback {

@@ -17,6 +17,7 @@ import com.example.securesms.Models.ListSMS
 import com.example.securesms.Models.SMS
 import com.example.securesms.Services.EncryptionService
 import com.google.android.material.textfield.TextInputLayout
+import java.math.BigInteger
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -28,7 +29,7 @@ class ContactViewActivity : AppCompatActivity() {
     lateinit var messageInput : TextInputLayout
     lateinit var contact : Contact
     var privateKey = 0
-    var secretKey = 0
+    lateinit var secretKey : BigInteger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +39,7 @@ class ContactViewActivity : AppCompatActivity() {
         val messages = (intent.getSerializableExtra("messages") as ListSMS).smses
         privateKey = intent.getIntExtra("privateKey", 0)
 
-        secretKey = EncryptionService.CalculateKey(contact.publicP, contact.publicKey,privateKey)
+        secretKey = EncryptionService.CalculateKey(contact.publicP, contact.publicKey,privateKey.toBigInteger())
 
         messagesList = findViewById(R.id.messagesListView)
         contactNameTextView = findViewById(R.id.contactNameText)
@@ -74,13 +75,6 @@ class ContactViewActivity : AppCompatActivity() {
                 Toast.makeText(this, "Cannot send empty message", Toast.LENGTH_LONG).show()
             }
         }
-
-        val message = "";
-        val privateKey = 12;
-        val publicKey = 19;
-        val publicP = 29435;
-        val secretKey = EncryptionService.CalculateKey(publicP,publicKey,privateKey).toString();
-        val decryptedMessage = EncryptionService.Decrypt(message,secretKey);
     }
 
 

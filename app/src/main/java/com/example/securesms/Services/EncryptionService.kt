@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import androidx.core.content.ContextCompat
 import com.example.securesms.R
+import java.math.BigInteger
 import java.security.spec.KeySpec
 import java.util.*
 import javax.crypto.Cipher
@@ -52,8 +53,9 @@ class EncryptionService {
             return secret
         }
 
-        fun CalculateKey(modulo: Int, powerBase: Int, powerExponent: Int): Int {
-            return Math.pow(powerBase.toDouble(), powerExponent.toDouble()).toInt() % modulo;
+        fun CalculateKey(modulo: BigInteger, powerBase: BigInteger, powerExponent: BigInteger): BigInteger {
+            //return Math.pow(powerBase.toDouble(), powerExponent.toDouble()).toInt() % modulo;
+            return powerBase.modPow(powerExponent, modulo)
         }
     }
 }

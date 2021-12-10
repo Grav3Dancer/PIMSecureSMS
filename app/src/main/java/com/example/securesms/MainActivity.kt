@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.ListView
 import com.example.securesms.Adapters.ContactsListAdapter
 import com.example.securesms.Services.SmsService
@@ -13,8 +14,12 @@ import android.widget.Button
 import android.widget.ImageButton
 import com.example.securesms.Models.Contact
 import com.example.securesms.Models.SMS
+import com.example.securesms.Services.FirebaseService
 import com.example.securesms.authentication.LoginActivity
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.firestore.FirebaseFirestore
+import java.math.BigInteger
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var buttonAddContact : Button
@@ -23,6 +28,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var contacts : MutableList<Contact>;
     lateinit var adapter : ContactsListAdapter
     lateinit var refreshButton : ImageButton
+    lateinit var firebaseService: FirebaseService
+    lateinit var uid : String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,6 +40,9 @@ class MainActivity : AppCompatActivity() {
         refreshButton = findViewById(R.id.refresh)
         adapter = ContactsListAdapter(this)
         contactListView.adapter = adapter
+
+        firebaseService = FirebaseService()
+        uid = firebaseService.getCurrentUser().uid
 
         ListSMSes(GetListOfSMSes(contacts))
 
@@ -61,9 +71,13 @@ class MainActivity : AppCompatActivity() {
     }
     private fun GetContacts(): MutableList<Contact> {
         //call api
-        return mutableListOf<Contact>(Contact("Microsoft", 123, 67890, "Microsoft"),
-            Contact("SAN_PL",213,34355,"SAN_PL"),
-            Contact("TestowyKontaktXD",213,34355,"123456780")
+        val xd = 213
+        val xd2 = 34355
+        val pkey = xd.toBigInteger()
+        val pubP = xd2.toBigInteger()
+        return mutableListOf<Contact>(Contact("Microsoft", pkey, pubP, "Microsoft"),
+            Contact("SAN_PL",pkey,pubP,"SAN_PL"),
+            Contact("TestowyKontaktXD",pkey,pubP,"123456780")
         );
     }
 
@@ -78,6 +92,8 @@ class MainActivity : AppCompatActivity() {
         buttonAddContact = findViewById(R.id.buttonAddContact)
         buttonAddContact.setOnClickListener {
             val intent = Intent(this, AddContactActivity::class.java)
+            intent.putExtra("userId", uid) //TODO nasze uid
+            intent.putExtra("privateKey", 10) //TODO legit private key
             startActivity(intent)
         }
     }
