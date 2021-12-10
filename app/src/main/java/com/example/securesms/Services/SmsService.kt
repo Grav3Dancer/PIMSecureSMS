@@ -1,6 +1,7 @@
 package com.example.securesms.Services
 
 import android.content.Context
+import android.database.Cursor
 import android.net.Uri
 import android.util.Log
 import com.example.securesms.Models.Contact
@@ -16,11 +17,10 @@ class SmsService(val context: Context){
         val groupedMessages = GroupByPhoneNumber(GetAllSMS())
         return LinkSMSesToContacts(groupedMessages,contacts)
     }
+
     private fun TimeStampToDate(timestamp:String):Date{
         return Date(timestamp.toLong())
     }
-
-
 
     private fun GetAllSMS():MutableList<SMS>{
         val smsList: MutableList<SMS> = ArrayList()
@@ -35,10 +35,11 @@ class SmsService(val context: Context){
             context.contentResolver.query(Uri.parse("content://sms/sent"), null, null, null, null)
         if (cursorSent!!.moveToFirst()) {
             do {
+                var phoneNumber =  cursorSent.getString(2);
                 smsList.add(
                     SMS(
                         TimeStampToDate(cursorSent.getString(4)),
-                        cursorSent.getString(2),
+                        if (phoneNumber.length > 9) phoneNumber.substring(phoneNumber.length - 9) else phoneNumber,
                         cursorSent.getString(12),
                         true
                     )
@@ -52,10 +53,11 @@ class SmsService(val context: Context){
             context.contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
         if (cursorInbox!!.moveToFirst()) {
             do {
+                var phoneNumber =  cursorInbox.getString(2);
                 smsList.add(
                     SMS(
                         TimeStampToDate(cursorInbox.getString(4)),
-                        cursorInbox.getString(2),
+                        if (phoneNumber.length > 9) phoneNumber.substring(phoneNumber.length - 9) else phoneNumber,
                         cursorInbox.getString(12),
                         false
                     )
