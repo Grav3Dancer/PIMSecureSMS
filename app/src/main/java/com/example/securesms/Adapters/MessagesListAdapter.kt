@@ -8,8 +8,9 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import com.example.securesms.Models.SMS
 import com.example.securesms.R
+import com.example.securesms.Services.EncryptionService
 
-class MessagesListAdapter(val context : Context) : BaseAdapter() {
+class MessagesListAdapter(val context : Context, val key : String) : BaseAdapter() {
     var messages = mutableListOf<SMS>()
 
     override fun getCount(): Int {
@@ -29,10 +30,10 @@ class MessagesListAdapter(val context : Context) : BaseAdapter() {
         var newMessageView : View
         if (item.send) {
             newMessageView = LayoutInflater.from(context).inflate(R.layout.messages_list_item_sent, viewGroup, false)
-            newMessageView.findViewById<TextView>(R.id.sentMessageText).text = item.message
+            newMessageView.findViewById<TextView>(R.id.sentMessageText).text = EncryptionService.Decrypt(item.message, key)
         } else {
             newMessageView = LayoutInflater.from(context).inflate(R.layout.messages_list_item_received, viewGroup, false)
-            newMessageView.findViewById<TextView>(R.id.receivedMessageText).text = item.message
+            newMessageView.findViewById<TextView>(R.id.receivedMessageText).text = EncryptionService.Decrypt(item.message, key)
         }
 
         return newMessageView

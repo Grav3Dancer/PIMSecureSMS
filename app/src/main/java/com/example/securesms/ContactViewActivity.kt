@@ -26,13 +26,19 @@ class ContactViewActivity : AppCompatActivity() {
     lateinit var messagesList : ListView
     lateinit var contactNameTextView : TextView
     lateinit var messageInput : TextInputLayout
+    lateinit var contact : Contact
+    var privateKey = 0
+    var secretKey = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contact_view)
 
-        val contact = intent.getSerializableExtra("contact") as Contact?
+        contact = intent.getSerializableExtra("contact") as Contact
         val messages = (intent.getSerializableExtra("messages") as ListSMS).smses
+        privateKey = intent.getIntExtra("privateKey", 0)
+
+        secretKey = EncryptionService.CalculateKey(contact.publicP, contact.publicKey,privateKey)
 
         messagesList = findViewById(R.id.messagesListView)
         contactNameTextView = findViewById(R.id.contactNameText)
@@ -44,7 +50,7 @@ class ContactViewActivity : AppCompatActivity() {
             contactNameTextView.text = "No contact name"
         }
 
-        val adapter = MessagesListAdapter(this)
+        val adapter = MessagesListAdapter(this, secretKey.toString())
         messagesList.adapter = adapter
         messages.forEach {
             adapter.addItem(it)
@@ -77,8 +83,11 @@ class ContactViewActivity : AppCompatActivity() {
         val decryptedMessage = EncryptionService.Decrypt(message,secretKey);
     }
 
+
+
     private fun sendSMS(phoneNumber: String, message: String) {
+        val encryptedMessage = EncryptionService.Encrypt(message, secretKey.toString())
         val sentPI: PendingIntent = PendingIntent.getBroadcast(this, 0, Intent("SMS_SENT"), 0)
-        SmsManager.getDefault().sendTextMessage(phoneNumber, null, message, sentPI, null)
+        SmsManager.getDefault().sendTextMessage(phoneNumber, null, encryptedMessage, sentPI, null)
     }
 }

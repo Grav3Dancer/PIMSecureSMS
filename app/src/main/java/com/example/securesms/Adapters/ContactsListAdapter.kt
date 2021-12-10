@@ -42,9 +42,10 @@ class ContactsListAdapter(val context:Context) : BaseAdapter(), Filterable {
         newContactView.findViewById<TextView>(R.id.LastMessage).text = item.messages.lastOrNull()?.message ?: "";
 
         newContactView.setOnClickListener {
-            val intent = Intent(context,ContactViewActivity::class.java);
-            intent.putExtra("contact",item.contact);
-            intent.putExtra("messages",ListSMS(item.messages));
+            val intent = Intent(context,ContactViewActivity::class.java)
+            intent.putExtra("contact",item.contact)
+            intent.putExtra("messages",ListSMS(item.messages))
+            intent.putExtra("privateKey", 12) //TODO legit klucz
             context.startActivity(intent);
         }
         return newContactView
@@ -52,6 +53,12 @@ class ContactsListAdapter(val context:Context) : BaseAdapter(), Filterable {
     fun AddItem(contact:Contact,messages: List<SMS>){
         contactList.add(ListObject(contact, messages))
         filteredContactList = contactList;
+        notifyDataSetChanged()
+    }
+
+    fun clearItems(){
+        contactList.clear()
+        filteredContactList.clear()
         notifyDataSetChanged()
     }
 

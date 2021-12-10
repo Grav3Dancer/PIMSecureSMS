@@ -1,6 +1,7 @@
 package com.example.securesms
 
 import android.content.Intent
+import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -9,6 +10,7 @@ import android.widget.ListView
 import com.example.securesms.Adapters.ContactsListAdapter
 import com.example.securesms.Services.SmsService
 import android.widget.Button
+import android.widget.ImageButton
 import com.example.securesms.Models.Contact
 import com.example.securesms.Models.SMS
 import com.example.securesms.authentication.LoginActivity
@@ -19,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var contactListView: ListView
     lateinit var searchBar : TextInputLayout
     lateinit var contacts : MutableList<Contact>;
+    lateinit var adapter : ContactsListAdapter
+    lateinit var refreshButton : ImageButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -26,7 +30,11 @@ class MainActivity : AppCompatActivity() {
         contacts = GetContacts();
         searchBar = findViewById(R.id.searchBarLayout);
         contactListView = findViewById(R.id.ContactsListView)
-        ListSMSes(GetListOfSMSes(contacts));
+        refreshButton = findViewById(R.id.refresh)
+        adapter = ContactsListAdapter(this)
+        contactListView.adapter = adapter
+
+        ListSMSes(GetListOfSMSes(contacts))
 
         searchBar.editText?.addTextChangedListener(object :TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -43,6 +51,10 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        refreshButton.setOnClickListener {
+            ListSMSes(GetListOfSMSes(contacts))
+        }
+
     }
     private fun SortContacts(contactFilter: String){
         (contactListView.adapter as ContactsListAdapter).filter.filter(contactFilter);
@@ -50,7 +62,8 @@ class MainActivity : AppCompatActivity() {
     private fun GetContacts(): MutableList<Contact> {
         //call api
         return mutableListOf<Contact>(Contact("Microsoft", 123, 67890, "Microsoft"),
-            Contact("SAN_PL",213,34355,"SAN_PL")
+            Contact("SAN_PL",213,34355,"SAN_PL"),
+            Contact("TestowyKontaktXD",213,34355,"123456780")
         );
     }
 
@@ -60,8 +73,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun ListSMSes(messages:Map<Contact,List<SMS>>) {
-        val adapter = ContactsListAdapter(this)
-        contactListView.adapter = adapter
+        adapter.clearItems()
         messages.forEach { (s, list) -> adapter.AddItem(s, list) }
         buttonAddContact = findViewById(R.id.buttonAddContact)
         buttonAddContact.setOnClickListener {
