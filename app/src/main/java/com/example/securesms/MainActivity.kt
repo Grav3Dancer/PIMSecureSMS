@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         contactListView = findViewById(R.id.ContactsListView)
         val smsService= SmsService(this.applicationContext)
-        val x = mutableListOf<Contact>(Contact("x",123,67890,"Microsoft"))
+        val x = mutableListOf<Contact>(Contact("x",123,67890,"123456789"))
         val groupedMessages = smsService.GetMessages(x)
 
         val adapter = ContactsListAdapter(this)
