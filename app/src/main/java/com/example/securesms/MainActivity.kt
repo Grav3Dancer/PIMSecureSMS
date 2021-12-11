@@ -91,7 +91,14 @@ class MainActivity : AppCompatActivity() {
         })
 
         refreshButton.setOnClickListener {
-            ListSMSes(GetListOfSMSes(contacts))
+            firebaseService.getContacts { isSuccess, message, value ->
+                if (isSuccess) {
+                    contacts = (value as MutableList<Contact>)
+                    ListSMSes(GetListOfSMSes(contacts))
+                } else {
+                    Toast.makeText(this, "Getting contacts unsuccessful", Toast.LENGTH_LONG).show()
+                }
+            }
         }
 
     }
