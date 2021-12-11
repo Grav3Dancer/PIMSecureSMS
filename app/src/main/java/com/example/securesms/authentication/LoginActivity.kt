@@ -4,11 +4,9 @@ import android.Manifest
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import com.example.securesms.MainActivity
 import com.example.securesms.R
 import com.example.securesms.Services.FirebaseService
@@ -26,7 +24,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        emailInput = findViewById(R.id.usernameInput)
+        emailInput = findViewById(R.id.emailInput)
         passwordInput = findViewById(R.id.passwordInput)
         buttonLogin = findViewById(R.id.buttonLogin)
         buttonRegister = findViewById(R.id.buttonRegister)
