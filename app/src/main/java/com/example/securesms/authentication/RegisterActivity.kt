@@ -64,7 +64,7 @@ class RegisterActivity : AppCompatActivity() {
             val email = emailInput.editText!!.text.toString()
             val password = passwordInput.editText!!.text.toString()
             val passwordRepeat = passwordRepeatInput.editText!!.text.toString()
-            val phoneHumber = passwordRepeatInput.editText!!.text.toString()
+            val phoneHumber = phoneNumberInput.editText!!.text.toString()
             val uniqueKey = Random.nextInt(0, 20)
 
             if(password.equals(passwordRepeat)){
