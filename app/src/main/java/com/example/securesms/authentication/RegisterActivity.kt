@@ -1,66 +1,74 @@
 package com.example.securesms.authentication
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.telephony.TelephonyManager
-import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.example.securesms.MainActivity
 import com.example.securesms.R
 import com.example.securesms.Services.FirebaseService
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.firestore.FirebaseFirestore
+import java.lang.Exception
+import java.util.jar.Manifest
+import kotlin.random.Random
 
 class RegisterActivity : AppCompatActivity() {
 
+    lateinit var userNameInput : TextInputLayout
     lateinit var emailInput : TextInputLayout
     lateinit var passwordInput : TextInputLayout
     lateinit var passwordRepeatInput : TextInputLayout
+    lateinit var phoneNumberInput : TextInputLayout
     lateinit var buttonRegister : Button
-    lateinit var telNumber : String
     lateinit var buttonBack : FloatingActionButton
-    lateinit var tm : TelephonyManager
+    lateinit var telephonyManager : TelephonyManager
 
-    val database: FirebaseService = FirebaseService()
+    private val database: FirebaseService = FirebaseService()
+    private val permission = 101
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        emailInput = findViewById(R.id.usernameInput)
+        userNameInput = findViewById(R.id.userNameInput)
+        emailInput = findViewById(R.id.emailInput)
         passwordInput = findViewById(R.id.passwordInput)
         passwordRepeatInput = findViewById(R.id.passwordRepeatInput)
+        phoneNumberInput = findViewById(R.id.phoneNumberInput)
         buttonRegister = findViewById(R.id.buttonCreateAccount)
         buttonBack = findViewById(R.id.buttonBack)
-        tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
-/*        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_PHONE_STATE)) {
-                telNumber = tm.line1Number
-            }
-            else {
-                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_PHONE_STATE), 2)
-            }
-        }*/
-        telNumber = "13123123"
+        if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_PHONE_STATE), permission)
+        }
+
+        val number = telephonyManager.line1Number
+        if(number == null){
+            phoneNumberInput.isEnabled = true
+        }
+        else{
+            phoneNumberInput.editText!!.setText(number)
+        }
 
         buttonRegister.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
-            val username = emailInput.editText!!.text.toString()
+            val username = userNameInput.editText!!.text.toString()
+            val email = emailInput.editText!!.text.toString()
             val password = passwordInput.editText!!.text.toString()
             val passwordRepeat = passwordRepeatInput.editText!!.text.toString()
-            val uniqueKey = java.util.UUID.randomUUID().toString().take(16)
+            val phoneHumber = passwordRepeatInput.editText!!.text.toString()
+            val uniqueKey = Random.nextInt(0, 20)
 
             if(password.equals(passwordRepeat)){
-                database.register(username, "", password, telNumber, uniqueKey){ isSuccess, message, value ->
+                database.register(username, email, password, phoneHumber, uniqueKey){ isSuccess, message, value ->
                     if (isSuccess) {
                         Toast.makeText(this, "Registered successfully", Toast.LENGTH_SHORT).show()
                         startActivity(intent)

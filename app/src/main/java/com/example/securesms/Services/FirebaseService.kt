@@ -24,7 +24,7 @@ class FirebaseService {
             .addOnFailureListener{ error -> callback.onResult(false, error.message, null)}
     }
 
-    fun register(userName: String, email: String?, password: String?, telNumber: String?, uniqueKey: String, callback: Callback){
+    fun register(userName: String, email: String?, password: String?, telNumber: String?, uniqueKey: Int, callback: Callback){
         if(!checkIfProvided(userName, email, password, telNumber, uniqueKey)){
             return callback.onResult(false, "Data not provided", null)
         }
@@ -73,7 +73,7 @@ class FirebaseService {
             "publicKeyA" to ownPublicKey,
             "publicKeyB" to contactPublicKey,
             "modulus" to modulus,
-            "base" to base);
+            "base" to base)
 
         db.collection("contacts")
             .document()
@@ -111,14 +111,14 @@ class FirebaseService {
                     contact = if(isContactUserA){
                         Contact(
                             user.userName,
-                            contactDataModel.publicKeyA,
-                            contactDataModel.modulus,
+                            contactDataModel.publicKeyA.toBigInteger(),
+                            contactDataModel.modulus.toBigInteger(),
                             user.phoneNumber)
                     } else{
                         Contact(
                             user.userName,
-                            contactDataModel.publicKeyB,
-                            contactDataModel.modulus,
+                            contactDataModel.publicKeyB.toBigInteger(),
+                            contactDataModel.modulus.toBigInteger(),
                             user.phoneNumber)
                     }
 
@@ -155,7 +155,6 @@ class FirebaseService {
 
                 db.collection("contacts")
                     .whereEqualTo("userIdB", "1") //auth.currentUser!!.uid
-                    .whereNotIn("userIdA", contacts.map { it.userIdB })
                     .get()
                     .addOnSuccessListener { innerRes ->
                         val secondIterationContacts = innerRes.toObjects(ContactDataModel::class.java)
@@ -169,9 +168,10 @@ class FirebaseService {
             .addOnFailureListener { error -> callback.onResult(false, error.message, null) }
     }
 
-    private fun checkIfProvided(vararg parameters : String?) : Boolean{
+    private fun checkIfProvided(vararg parameters : Any?) : Boolean{
         parameters.forEach { parameter ->
-            if(parameter.isNullOrBlank()) return false;
+            if(parameter is String? && parameter.isNullOrBlank()) return false
+            if(parameter is Int? && parameter == null) return false;
         }
         return true
     }
