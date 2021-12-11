@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.example.securesms.Models.ContactFirebaseModel
 import com.example.securesms.Models.ContactQRData
 import com.example.securesms.Services.EncryptionService
+import com.example.securesms.Services.FirebaseService
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
@@ -26,9 +27,11 @@ import java.util.*
 class AddContactActivity : AppCompatActivity() {
     lateinit var buttonBack : FloatingActionButton
     lateinit var buttonGoToScanner : Button
+    lateinit var buttonAdd : Button
     lateinit var scannedText : TextView
     lateinit var userId : String
     var privateKey = 0
+    lateinit var firebaseService: FirebaseService
 
     private lateinit var imageViewQR: ImageView
 
@@ -37,7 +40,7 @@ class AddContactActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_contact)
-
+        firebaseService = FirebaseService()
         userId = intent.getStringExtra("userId")!!
         privateKey = intent.getIntExtra("privateKey", 0)
 
@@ -63,11 +66,16 @@ class AddContactActivity : AppCompatActivity() {
             startForResult.launch(intent)
         }
 
+        buttonAdd = findViewById(R.id.buttonConfirmAdd)
+        buttonAdd.setOnClickListener {
+
+        }
+
         val p = BigInteger(16, 100, Random())
         val g = BigInteger(5, 100, Random())
         val publicKey = EncryptionService.CalculateKey(p, g, privateKey.toBigInteger()).toBigInteger()
 
-        val data = ContactQRData(userId!!, publicKey, p, g)
+        val data = ContactQRData(userId, publicKey, p, g)
 
         generateQrCode(data)
     }
@@ -102,8 +110,8 @@ class AddContactActivity : AppCompatActivity() {
 
     //val data = ContactQRData(userId!!, publicKey, p, g)
 
-    private fun addNewContact(scannedText : String) {
-        val scannedTextFields = scannedText.split(":")
+    private fun addNewContact(scanned : String) {
+        val scannedTextFields = scanned.split(":")
         if (scannedTextFields[0] == prefix && scannedTextFields.size == 5) {
             val data = ContactQRData(scannedTextFields[1],
                 scannedTextFields[2].toBigInteger(),
@@ -117,8 +125,21 @@ class AddContactActivity : AppCompatActivity() {
                 data.publicKey,
                 data.publicP,
                 data.publicG)
+            scannedText.text = "Contact scanned!"
 
-            //TODO send to firebase
+            firebaseService.addContact(
+                data.contactId,
+                EncryptionService.CalculateKey(data.publicP, data.publicG, privateKey.toBigInteger()),
+                data.publicKey.toInt(),
+                data.publicP.toInt(),
+                data.publicG.toInt()) { isSuccess, message, value ->
+                if (isSuccess) {
+                    Toast.makeText(this, "Added contact", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Adding contact failed !", Toast.LENGTH_LONG).show()
+                }
+            }
+
         } else {
             Toast.makeText(this, "Wrong QR code data", Toast.LENGTH_LONG).show()
         }

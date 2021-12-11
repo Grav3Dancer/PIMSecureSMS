@@ -61,7 +61,7 @@ class FirebaseService {
         db.collection("privateKeys")
             .whereEqualTo("userId", auth.currentUser!!.uid)
             .get()
-            .addOnSuccessListener { res -> callback.onResult(true, null, res.elementAt(0).data["key"].toString()) }
+            .addOnSuccessListener { res -> callback.onResult(true, null, res.elementAt(0).data["key"]) }
             .addOnFailureListener { error -> callback.onResult(false, error.message, null) }
     }
 
@@ -96,7 +96,7 @@ class FirebaseService {
             for(contactDataModel in contactDataModels) {
                 var contact: Contact
 
-                val isContactUserA: Boolean = "1" == contactDataModel.userIdB //auth.currentUser!!.uid
+                val isContactUserA: Boolean = auth.currentUser!!.uid == contactDataModel.userIdB //TODO auth.currentUser!!.uid
 
                 val contactUserId =
                     if(isContactUserA) contactDataModel.userIdA
@@ -111,14 +111,14 @@ class FirebaseService {
                     contact = if(isContactUserA){
                         Contact(
                             user.userName,
-                            contactDataModel.publicKeyA,
-                            contactDataModel.modulus,
+                            contactDataModel.publicKeyA.toBigInteger(),
+                            contactDataModel.modulus.toBigInteger(),
                             user.phoneNumber)
                     } else{
                         Contact(
                             user.userName,
-                            contactDataModel.publicKeyB,
-                            contactDataModel.modulus,
+                            contactDataModel.publicKeyB.toBigInteger(),
+                            contactDataModel.modulus.toBigInteger(),
                             user.phoneNumber)
                     }
 
@@ -146,7 +146,7 @@ class FirebaseService {
         val contacts = mutableListOf<ContactDataModel>()
 
         db.collection("contacts")
-            .whereEqualTo("userIdA", "1") //auth.currentUser!!.uid
+            .whereEqualTo("userIdA", auth.currentUser!!.uid) //TODO auth.currentUser!!.uid
             .get()
             .addOnSuccessListener { res ->
                 val firstIterationContacts = res.toObjects(ContactDataModel::class.java)
@@ -154,8 +154,7 @@ class FirebaseService {
                 contacts.addAll(firstIterationContacts)
 
                 db.collection("contacts")
-                    .whereEqualTo("userIdB", "1") //auth.currentUser!!.uid
-                    .whereNotIn("userIdA", contacts.map { it.userIdB })
+                    .whereEqualTo("userIdB", auth.currentUser!!.uid) //TODO auth.currentUser!!.uid
                     .get()
                     .addOnSuccessListener { innerRes ->
                         val secondIterationContacts = innerRes.toObjects(ContactDataModel::class.java)

@@ -1,6 +1,7 @@
 package com.example.securesms.DataModels
 
 import java.io.Serializable
+import java.math.BigInteger
 
 data class ContactDataModel(
     val userIdA: String = "",

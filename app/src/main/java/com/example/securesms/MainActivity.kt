@@ -12,6 +12,7 @@ import com.example.securesms.Adapters.ContactsListAdapter
 import com.example.securesms.Services.SmsService
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.Toast
 import com.example.securesms.Models.Contact
 import com.example.securesms.Models.SMS
 import com.example.securesms.Services.FirebaseService
@@ -25,16 +26,17 @@ class MainActivity : AppCompatActivity() {
     lateinit var buttonAddContact : Button
     lateinit var contactListView: ListView
     lateinit var searchBar : TextInputLayout
-    lateinit var contacts : MutableList<Contact>;
+    var contacts = mutableListOf<Contact>()
     lateinit var adapter : ContactsListAdapter
     lateinit var refreshButton : ImageButton
     lateinit var firebaseService: FirebaseService
     lateinit var uid : String
+    var privateKey = 17
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        contacts = GetContacts();
+        //contacts = GetContacts();
         searchBar = findViewById(R.id.searchBarLayout);
         contactListView = findViewById(R.id.ContactsListView)
         refreshButton = findViewById(R.id.refresh)
@@ -43,8 +45,35 @@ class MainActivity : AppCompatActivity() {
 
         firebaseService = FirebaseService()
         uid = firebaseService.getCurrentUser().uid
+        Log.v("Main_user_UID", uid)
 
-        ListSMSes(GetListOfSMSes(contacts))
+        firebaseService.getPrivateKey { isSuccess, message, value ->
+            if (isSuccess) {
+                privateKey = (value as Long).toInt()
+                Log.v("Main_privateKey", "$privateKey success")
+            } else {
+                Log.v("Main_privateKey", "failed")
+            }
+        }
+
+        buttonAddContact = findViewById(R.id.buttonAddContact)
+        buttonAddContact.setOnClickListener {
+            val intent = Intent(this, AddContactActivity::class.java)
+            intent.putExtra("userId", uid) //TODO nasze uid
+            intent.putExtra("privateKey", privateKey) //TODO legit private key
+            startActivity(intent)
+        }
+
+        firebaseService.getContacts { isSuccess, message, value ->
+            if (isSuccess) {
+                contacts = (value as MutableList<Contact>)
+                ListSMSes(GetListOfSMSes(contacts))
+            } else {
+                Toast.makeText(this, "Getting contacts unsuccessful", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        //ListSMSes(GetListOfSMSes(contacts))
 
         searchBar.editText?.addTextChangedListener(object :TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -81,6 +110,7 @@ class MainActivity : AppCompatActivity() {
         );
     }
 
+
     private fun GetListOfSMSes(contacts : MutableList<Contact>):Map<Contact,List<SMS>>{
         val smsService = SmsService(this.applicationContext)
         return smsService.GetMessages(contacts)
@@ -89,13 +119,7 @@ class MainActivity : AppCompatActivity() {
     private fun ListSMSes(messages:Map<Contact,List<SMS>>) {
         adapter.clearItems()
         messages.forEach { (s, list) -> adapter.AddItem(s, list) }
-        buttonAddContact = findViewById(R.id.buttonAddContact)
-        buttonAddContact.setOnClickListener {
-            val intent = Intent(this, AddContactActivity::class.java)
-            intent.putExtra("userId", uid) //TODO nasze uid
-            intent.putExtra("privateKey", 10) //TODO legit private key
-            startActivity(intent)
-        }
+
     }
 
     override fun onDestroy() {

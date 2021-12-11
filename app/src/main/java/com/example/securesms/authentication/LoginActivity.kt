@@ -40,6 +40,9 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
+        requestPermissionLauncher.launch(
+            Manifest.permission.READ_SMS)
+
         buttonLogin.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             val username = emailInput.editText!!.text.toString()
@@ -53,14 +56,6 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }
             }
-            intent.putExtra("login", "HUBERT")
-            intent.putExtra("cosinnego", "DUPA")
-
-            requestPermissionLauncher.launch(
-                Manifest.permission.READ_SMS)
-
-            startActivity(intent)
-            this.finish()
         }
 
         buttonRegister.setOnClickListener {

@@ -49,9 +49,6 @@ class ScannerActivity : AppCompatActivity() {
 
         codeScanner.decodeCallback = DecodeCallback {
             // here we have it.text with decoded data
-            runOnUiThread {
-                Toast.makeText(this, "Scan result: ${it.text}", Toast.LENGTH_LONG).show()
-            }
             setResult(Activity.RESULT_OK,
                 Intent()
                     .putExtra("scannedText", it.text))
