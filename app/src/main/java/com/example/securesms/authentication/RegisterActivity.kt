@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.telephony.TelephonyManager
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -51,7 +52,7 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         val number = telephonyManager.line1Number
-        if(number == null){
+        if(number.isNullOrBlank()){
             phoneNumberInput.isEnabled = true
         }
         else{

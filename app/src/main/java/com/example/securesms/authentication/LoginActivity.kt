@@ -40,6 +40,8 @@ class LoginActivity : AppCompatActivity() {
 
         requestPermissionLauncher.launch(
             Manifest.permission.READ_SMS)
+        requestPermissionLauncher.launch(
+            Manifest.permission.SEND_SMS)
 
         buttonLogin.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
