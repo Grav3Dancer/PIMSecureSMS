@@ -44,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             val username = emailInput.editText!!.text.toString()
             val password = passwordInput.editText!!.text.toString()
-            database.login(username, password){ isSuccess, message ->
+            database.login(username, password){ isSuccess, message, value ->
                 if (isSuccess) {
                     Toast.makeText(this, "Logged in successfully", Toast.LENGTH_SHORT).show()
                     startActivity(intent)

@@ -60,7 +60,7 @@ class RegisterActivity : AppCompatActivity() {
             val uniqueKey = java.util.UUID.randomUUID().toString().take(16)
 
             if(password.equals(passwordRepeat)){
-                database.register(username, password, telNumber, uniqueKey){ isSuccess, message ->
+                database.register(username, "", password, telNumber, uniqueKey){ isSuccess, message, value ->
                     if (isSuccess) {
                         Toast.makeText(this, "Registered successfully", Toast.LENGTH_SHORT).show()
                         startActivity(intent)
