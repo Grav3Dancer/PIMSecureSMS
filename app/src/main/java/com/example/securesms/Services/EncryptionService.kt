@@ -53,9 +53,9 @@ class EncryptionService {
             return secret
         }
 
-        fun CalculateKey(modulo: BigInteger, powerBase: BigInteger, powerExponent: BigInteger): BigInteger {
-            //return Math.pow(powerBase.toDouble(), powerExponent.toDouble()).toInt() % modulo;
-            return powerBase.modPow(powerExponent, modulo)
+        fun CalculateKey(modulo: BigInteger, powerBase: BigInteger, powerExponent: BigInteger): Int {
+            return Math.pow(powerBase.toDouble(), powerExponent.toDouble()).toInt() % modulo.toInt();
+            //return powerBase.modPow(powerExponent, modulo).toInt()
         }
     }
 }

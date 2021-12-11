@@ -65,7 +65,7 @@ class AddContactActivity : AppCompatActivity() {
 
         val p = BigInteger(16, 100, Random())
         val g = BigInteger(5, 100, Random())
-        val publicKey = EncryptionService.CalculateKey(p, g, privateKey.toBigInteger())
+        val publicKey = EncryptionService.CalculateKey(p, g, privateKey.toBigInteger()).toBigInteger()
 
         val data = ContactQRData(userId!!, publicKey, p, g)
 
@@ -113,7 +113,7 @@ class AddContactActivity : AppCompatActivity() {
             val fbContact = ContactFirebaseModel(
                 userId,
                 data.contactId,
-                EncryptionService.CalculateKey(data.publicP, data.publicG, privateKey.toBigInteger()),
+                EncryptionService.CalculateKey(data.publicP, data.publicG, privateKey.toBigInteger()).toBigInteger(),
                 data.publicKey,
                 data.publicP,
                 data.publicG)

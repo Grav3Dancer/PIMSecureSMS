@@ -28,8 +28,8 @@ class ContactViewActivity : AppCompatActivity() {
     lateinit var contactNameTextView : TextView
     lateinit var messageInput : TextInputLayout
     lateinit var contact : Contact
-    var privateKey = 0
-    lateinit var secretKey : BigInteger
+    var privateKey = 1
+    var secretKey = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,7 @@ class ContactViewActivity : AppCompatActivity() {
 
         contact = intent.getSerializableExtra("contact") as Contact
         val messages = (intent.getSerializableExtra("messages") as ListSMS).smses
-        privateKey = intent.getIntExtra("privateKey", 0)
+        privateKey = intent.getIntExtra("privateKey", 1)
 
         secretKey = EncryptionService.CalculateKey(contact.publicP, contact.publicKey,privateKey.toBigInteger())
 
