@@ -7,6 +7,7 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -45,13 +46,23 @@ class AddContactActivity : AppCompatActivity() {
         privateKey = intent.getIntExtra("privateKey", 0)
 
         scannedText = findViewById(R.id.scannedText)
+        buttonAdd = findViewById(R.id.buttonConfirmAdd)
+        buttonAdd.visibility = View.INVISIBLE
 
         val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result : ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val scanned = result.data!!.getStringExtra("scannedText")
-                scannedText.text = scanned
-                addNewContact(scanned!!)
+                val scannedTextFields = scanned!!.split(":")
+                if (scannedTextFields[0] == prefix && scannedTextFields.size == 5) {
+                    scannedText.text = "Contact scanned!"
+                    buttonAdd.visibility = View.VISIBLE
+                    buttonAdd.setOnClickListener {
+                        addNewContact(scanned!!)
+                    }
+                } else {
+                    scannedText.text = "Scanned data does not pat"
+                }
             }
         }
 
@@ -64,11 +75,6 @@ class AddContactActivity : AppCompatActivity() {
         buttonGoToScanner.setOnClickListener {
             val intent  = Intent(this, ScannerActivity::class.java)
             startForResult.launch(intent)
-        }
-
-        buttonAdd = findViewById(R.id.buttonConfirmAdd)
-        buttonAdd.setOnClickListener {
-
         }
 
         val p = BigInteger(16, 100, Random())
@@ -125,7 +131,6 @@ class AddContactActivity : AppCompatActivity() {
                 data.publicKey,
                 data.publicP,
                 data.publicG)
-            scannedText.text = "Contact scanned!"
 
             firebaseService.addContact(
                 data.contactId,

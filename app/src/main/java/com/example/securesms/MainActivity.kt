@@ -40,8 +40,7 @@ class MainActivity : AppCompatActivity() {
         searchBar = findViewById(R.id.searchBarLayout);
         contactListView = findViewById(R.id.ContactsListView)
         refreshButton = findViewById(R.id.refresh)
-        adapter = ContactsListAdapter(this)
-        contactListView.adapter = adapter
+
 
         firebaseService = FirebaseService()
         uid = firebaseService.getCurrentUser().uid
@@ -51,16 +50,20 @@ class MainActivity : AppCompatActivity() {
             if (isSuccess) {
                 privateKey = (value as Long).toInt()
                 Log.v("Main_privateKey", "$privateKey success")
+                adapter = ContactsListAdapter(this, privateKey)
+                contactListView.adapter = adapter
             } else {
                 Log.v("Main_privateKey", "failed")
+                adapter = ContactsListAdapter(this, 12)
+                contactListView.adapter = adapter
             }
         }
 
         buttonAddContact = findViewById(R.id.buttonAddContact)
         buttonAddContact.setOnClickListener {
             val intent = Intent(this, AddContactActivity::class.java)
-            intent.putExtra("userId", uid) //TODO nasze uid
-            intent.putExtra("privateKey", privateKey) //TODO legit private key
+            intent.putExtra("userId", uid)
+            intent.putExtra("privateKey", privateKey)
             startActivity(intent)
         }
 

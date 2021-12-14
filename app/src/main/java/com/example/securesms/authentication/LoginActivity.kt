@@ -1,9 +1,11 @@
 package com.example.securesms.authentication
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,6 +49,8 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             val username = emailInput.editText!!.text.toString()
             val password = passwordInput.editText!!.text.toString()
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow( window.decorView.rootView.windowToken,0)
             database.login(username, password){ isSuccess, message, value ->
                 if (isSuccess) {
                     Toast.makeText(this, "Logged in successfully", Toast.LENGTH_SHORT).show()

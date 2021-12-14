@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.telephony.SmsManager
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.ListView
 import android.widget.TextView
@@ -38,6 +39,7 @@ class ContactViewActivity : AppCompatActivity() {
         contact = intent.getSerializableExtra("contact") as Contact
         val messages = (intent.getSerializableExtra("messages") as ListSMS).smses
         privateKey = intent.getIntExtra("privateKey", 1)
+        Log.v("ContactView_privKey", privateKey.toString())
 
         secretKey = EncryptionService.CalculateKey(contact.publicP, contact.publicKey,privateKey.toBigInteger())
 

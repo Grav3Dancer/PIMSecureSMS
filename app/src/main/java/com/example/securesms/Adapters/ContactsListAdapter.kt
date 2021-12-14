@@ -15,7 +15,7 @@ import com.example.securesms.Models.ListSMS
 import com.example.securesms.Models.SMS
 import com.example.securesms.R
 
-class ContactsListAdapter(val context:Context) : BaseAdapter(), Filterable {
+class ContactsListAdapter(val context:Context, val privateKey : Int) : BaseAdapter(), Filterable {
     class ListObject(val contact:Contact,val messages: List<SMS>)
 
     var contactList = mutableListOf<ListObject>()
@@ -39,13 +39,19 @@ class ContactsListAdapter(val context:Context) : BaseAdapter(), Filterable {
         val item = getItem(p0) as ListObject
 
         newContactView.findViewById<TextView>(R.id.ContactName).text = item.contact.contactName
-        newContactView.findViewById<TextView>(R.id.LastMessage).text = item.messages.lastOrNull()?.message ?: "";
+
+        val msg = item.messages.lastOrNull()?.message ?: ""
+        if (msg.split(";")[0] == "gR8b8M813_37 ") {
+            newContactView.findViewById<TextView>(R.id.LastMessage).text = "Message encrypted \uD83D\uDD12"
+        } else {
+            newContactView.findViewById<TextView>(R.id.LastMessage).text = msg
+        }
 
         newContactView.setOnClickListener {
             val intent = Intent(context,ContactViewActivity::class.java)
             intent.putExtra("contact",item.contact)
             intent.putExtra("messages",ListSMS(item.messages))
-            intent.putExtra("privateKey", 12) //TODO legit klucz
+            intent.putExtra("privateKey", privateKey)
             context.startActivity(intent);
         }
         return newContactView
