@@ -17,13 +17,14 @@ import com.example.securesms.Models.Contact
 import com.example.securesms.Models.SMS
 import com.example.securesms.Services.FirebaseService
 import com.example.securesms.authentication.LoginActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.firestore.FirebaseFirestore
 import java.math.BigInteger
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-    lateinit var buttonAddContact : Button
+    lateinit var buttonAddContact : FloatingActionButton
     lateinit var contactListView: ListView
     lateinit var searchBar : TextInputLayout
     var contacts = mutableListOf<Contact>()
